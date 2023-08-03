@@ -3,11 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.test.leftswipeactionview.view.SwipeActionView
+        android:id="@+id/sav1"
+        app:text="Item1"
+        app:backgroundColor="@color/green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.test.leftswipeactionview.view.SwipeActionView
+        android:id="@+id/sav2"
+        app:text="Item2"
+        app:backgroundColor="@color/blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnRecover"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="还原" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

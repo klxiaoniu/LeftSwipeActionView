@@ -6,8 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.core.animation.doOnEnd
+import com.test.leftswipeactionview.R
 import kotlin.math.abs
 
 
@@ -16,7 +16,18 @@ class SwipeActionView : View {
     }
 
     constructor(context: Context, attrs: android.util.AttributeSet) : super(context, attrs) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwipeActionView)
+        text = typedArray.getString(R.styleable.SwipeActionView_text) ?: ""
+        textSize = typedArray.getDimension(R.styleable.SwipeActionView_textSize, 60F)
+        textColor = typedArray.getColor(R.styleable.SwipeActionView_textColor, 0xFF000000.toInt())
+        backgroundColor = typedArray.getColor(R.styleable.SwipeActionView_backgroundColor, 0xFF00FF00.toInt())
+        typedArray.recycle()
     }
+
+    private var text = ""
+    private var textSize = 30F
+    private var textColor = 0xFF000000.toInt()
+    private var backgroundColor = 0xFF00FF00.toInt()
 
     private val viewHeight = 250
 
@@ -33,8 +44,11 @@ class SwipeActionView : View {
 
     override fun onDraw(canvas: Canvas) {
         val paint = Paint()
-        paint.color = 0xFF00FF00.toInt()
+        paint.color = backgroundColor
         canvas.drawRect(-position, 0F, screenWidth - position, viewHeight.toFloat(), paint)
+        paint.textSize = textSize
+        paint.color = textColor
+        canvas.drawText(text, 20F - position, viewHeight / 2 + textSize / 2, paint)
         paint.color = 0xFFFF0000.toInt()
         canvas.drawLine(0F,viewHeight.toFloat(),width.toFloat(),viewHeight.toFloat(),paint) // bottom line
     }
@@ -59,7 +73,6 @@ class SwipeActionView : View {
                                 this@SwipeActionView.visibility = GONE
                             }
                         }.start()
-                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show()
                 } else {
                     ObjectAnimator.ofFloat(this, "position", position, 0F)
                         .start()
@@ -74,5 +87,10 @@ class SwipeActionView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(measuredWidth, viewHeight)
+    }
+
+    fun recover() {
+        position = 0F
+        this.visibility = VISIBLE
     }
 }
