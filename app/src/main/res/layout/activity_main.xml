@@ -25,9 +25,10 @@
         android:id="@+id/btnRecover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="还原" />
+        android:text="还原"
+        tools:ignore="HardcodedText" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.test.leftswipeactionview.view.MyRecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.animation.doOnEnd
@@ -12,22 +13,29 @@ import kotlin.math.abs
 
 
 class SwipeActionView : View {
-    constructor(context: Context) : super(context) {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs){
+        init(context, attrs)
+    }
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle){
+        init(context, attrs)
     }
 
-    constructor(context: Context, attrs: android.util.AttributeSet) : super(context, attrs) {
+    private fun init(context: Context, attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwipeActionView)
         text = typedArray.getString(R.styleable.SwipeActionView_text) ?: ""
         textSize = typedArray.getDimension(R.styleable.SwipeActionView_textSize, 60F)
         textColor = typedArray.getColor(R.styleable.SwipeActionView_textColor, 0xFF000000.toInt())
-        backgroundColor = typedArray.getColor(R.styleable.SwipeActionView_backgroundColor, 0xFF00FF00.toInt())
+        bgColor = typedArray.getColor(R.styleable.SwipeActionView_backgroundColor, 0xFF00FF00.toInt())
         typedArray.recycle()
     }
 
-    private var text = ""
-    private var textSize = 30F
-    private var textColor = 0xFF000000.toInt()
-    private var backgroundColor = 0xFF00FF00.toInt()
+    var text = ""
+    var textSize = 60F
+    var textColor = 0xFF000000.toInt()
+    var bgColor = 0xFF00FF00.toInt()
+
+    var callback : Callback? = null
 
     private val viewHeight = 250
 
@@ -41,10 +49,10 @@ class SwipeActionView : View {
 
     private val screenWidth = context.resources.displayMetrics.widthPixels.toFloat()
 
+    private val paint = Paint()
 
     override fun onDraw(canvas: Canvas) {
-        val paint = Paint()
-        paint.color = backgroundColor
+        paint.color = bgColor
         canvas.drawRect(-position, 0F, screenWidth - position, viewHeight.toFloat(), paint)
         paint.textSize = textSize
         paint.color = textColor
@@ -70,13 +78,19 @@ class SwipeActionView : View {
                     ObjectAnimator.ofFloat(this, "position", position, screenWidth * if (position > 0) 1F else -1F)
                         .apply {
                             doOnEnd {
-                                this@SwipeActionView.visibility = GONE
+                                callback?.onSwipeFinished()
                             }
                         }.start()
                 } else {
                     ObjectAnimator.ofFloat(this, "position", position, 0F)
                         .start()
                 }
+                return true
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                ObjectAnimator.ofFloat(this, "position", position, 0F)
+                    .start()
                 return true
             }
         }
@@ -92,5 +106,10 @@ class SwipeActionView : View {
     fun recover() {
         position = 0F
         this.visibility = VISIBLE
+    }
+
+    interface Callback {
+        fun onSwipeFinished()
+        // 可拓展更多回调
     }
 }
