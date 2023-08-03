@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.test.leftswipeactionview.view.SwipeActionView
 
@@ -41,6 +42,9 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
             override fun onSwipeFinished() {
                 removeData(holder.adapterPosition)
             }
+        }
+        holder.sav.setOnClickListener {
+            Toast.makeText(it.context, "点击了${data[position]}", Toast.LENGTH_SHORT).show()
         }
     }
 

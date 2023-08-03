@@ -1,12 +1,14 @@
 package com.test.leftswipeactionview.view
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import androidx.core.animation.doOnEnd
 import com.test.leftswipeactionview.R
 import kotlin.math.abs
@@ -49,6 +51,8 @@ class SwipeActionView : View {
 
     private val screenWidth = context.resources.displayMetrics.widthPixels.toFloat()
 
+    private val mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
+
     private val paint = Paint()
 
     override fun onDraw(canvas: Canvas) {
@@ -61,6 +65,7 @@ class SwipeActionView : View {
         canvas.drawLine(0F,viewHeight.toFloat(),width.toFloat(),viewHeight.toFloat(),paint) // bottom line
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -82,6 +87,9 @@ class SwipeActionView : View {
                             }
                         }.start()
                 } else {
+                    if (abs(position) < mTouchSlop) {
+                        performClick()
+                    }
                     ObjectAnimator.ofFloat(this, "position", position, 0F)
                         .start()
                 }
