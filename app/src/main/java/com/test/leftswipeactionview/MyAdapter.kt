@@ -35,6 +35,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.sav.recover()    // 恢复原状，防止复用时出现问题
         holder.sav.text = data[position]
         holder.sav.callback = object : SwipeActionView.Callback {
             override fun onSwipeFinished() {
