@@ -22,7 +22,8 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun removeData(position: Int) {
+    private fun removeData(position: Int) {
+        if (position < 0 || position >= data.size) return
         val list = data.toMutableList()
         list.removeAt(position)
         data = list
@@ -47,7 +48,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
             removeData(holder.adapterPosition)
         }
         holder.sav.setOnClickListener {
-            Toast.makeText(it.context, "点击了${data[position]}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(it.context, "点击了${data[holder.adapterPosition]}", Toast.LENGTH_SHORT).show()
         }
     }
 

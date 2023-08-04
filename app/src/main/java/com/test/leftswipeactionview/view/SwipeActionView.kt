@@ -32,6 +32,9 @@ class SwipeActionView : View {
         typedArray.recycle()
     }
 
+    private val STATE_NORMAL = 0
+    private val STATE_REMOVED = 1
+
     var text = ""
     var textSize = 60F
     var textColor = 0xFF000000.toInt()
@@ -56,6 +59,8 @@ class SwipeActionView : View {
 
     private val paint = Paint()
 
+    private var state = STATE_NORMAL
+
     override fun onDraw(canvas: Canvas) {
         paint.color = bgColor
         canvas.drawRect(-position, 0F, screenWidth - position, viewHeight.toFloat(), paint)
@@ -68,6 +73,9 @@ class SwipeActionView : View {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        if (state == STATE_REMOVED) return true // 处于删除后的动画过程中，不响应事件，以避免崩溃和重复动画
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 startX = event.rawX
@@ -81,6 +89,7 @@ class SwipeActionView : View {
 
             MotionEvent.ACTION_UP -> {
                 if (abs(position) > screenWidth / 3) {
+                    state = STATE_REMOVED
                     ObjectAnimator.ofFloat(this, "position", position, screenWidth * if (position > 0) 1F else -1F)
                         .apply {
                             doOnEnd {
@@ -115,6 +124,7 @@ class SwipeActionView : View {
 
     fun recover() {
         position = 0F
+        state = STATE_NORMAL
         this.visibility = VISIBLE
     }
 
