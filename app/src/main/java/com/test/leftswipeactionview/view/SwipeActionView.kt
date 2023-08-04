@@ -37,7 +37,8 @@ class SwipeActionView : View {
     var textColor = 0xFF000000.toInt()
     var bgColor = 0xFF00FF00.toInt()
 
-    var callback : Callback? = null
+    //var callback : Callback? = null
+    var callback : (() -> Unit)? = null
 
     private val viewHeight = 250
 
@@ -83,7 +84,8 @@ class SwipeActionView : View {
                     ObjectAnimator.ofFloat(this, "position", position, screenWidth * if (position > 0) 1F else -1F)
                         .apply {
                             doOnEnd {
-                                callback?.onSwipeFinished()
+                                //callback?.onSwipeFinished()
+                                callback?.invoke()
                             }
                         }.start()
                 } else {
@@ -116,8 +118,8 @@ class SwipeActionView : View {
         this.visibility = VISIBLE
     }
 
-    interface Callback {
-        fun onSwipeFinished()
-        // 可拓展更多回调
-    }
+//    interface Callback {
+//        fun onSwipeFinished()
+//        // 可拓展更多回调
+//    }
 }

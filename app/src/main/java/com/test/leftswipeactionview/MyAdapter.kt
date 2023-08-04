@@ -38,10 +38,13 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.sav.recover()    // 恢复原状，防止复用时出现问题
         holder.sav.text = data[position]
-        holder.sav.callback = object : SwipeActionView.Callback {
-            override fun onSwipeFinished() {
-                removeData(holder.adapterPosition)
-            }
+//        holder.sav.callback = object : SwipeActionView.Callback {
+//            override fun onSwipeFinished() {
+//                removeData(holder.adapterPosition)
+//            }
+//        }
+        holder.sav.callback = {
+            removeData(holder.adapterPosition)
         }
         holder.sav.setOnClickListener {
             Toast.makeText(it.context, "点击了${data[position]}", Toast.LENGTH_SHORT).show()

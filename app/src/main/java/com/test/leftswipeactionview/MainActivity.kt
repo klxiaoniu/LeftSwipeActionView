@@ -15,15 +15,21 @@ class MainActivity : AppCompatActivity() {
 
         val sav1=findViewById<SwipeActionView>(R.id.sav1)
         val sav2=findViewById<SwipeActionView>(R.id.sav2)
-        sav1.callback = object : SwipeActionView.Callback {
-            override fun onSwipeFinished() {
-                sav1.visibility = View.GONE
-            }
+//        sav1.callback = object : SwipeActionView.Callback {
+//            override fun onSwipeFinished() {
+//                sav1.visibility = View.GONE
+//            }
+//        }
+//        sav2.callback = object : SwipeActionView.Callback {
+//            override fun onSwipeFinished() {
+//                sav2.visibility = View.GONE
+//            }
+//        }
+        sav1.callback = {
+            sav1.visibility = View.GONE
         }
-        sav2.callback = object : SwipeActionView.Callback {
-            override fun onSwipeFinished() {
-                sav2.visibility = View.GONE
-            }
+        sav2.callback = {
+            sav2.visibility = View.GONE
         }
         val rv = findViewById<RecyclerView>(R.id.rv)
         val adapter = MyAdapter()
